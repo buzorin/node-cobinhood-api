@@ -291,13 +291,30 @@ module.exports = function() {
 					return callback(JSON.parse(response.body).error.error_code);
 
 				let result = JSON.parse(body).success;
-				return callback(false, body);
+				return callback(false, result);
 			});
 		},
 		orderHistory: function(symbol, callback, limit = 50) {
 			let opt = defaultRequestOpt;
 				opt.url = baseUrl+'/v1/trading/order_history';
 				opt.qs.trading_pair_id = symbol;
+				opt.qs.limit = limit;
+				opt.headers.authorization = options.apiKey;
+			
+			request(opt, function(error, response, body) {
+				if (error)
+					return callback(error);
+
+				if (response && response.statusCode !== 200)
+					return callback(JSON.parse(response.body).error.error_code);
+
+				let result = JSON.parse(body).result.orders;
+				return callback(false, result);
+			});
+		},
+		orderHistoryAll: function(callback, limit = 50) {
+			let opt = defaultRequestOpt;
+				opt.url = baseUrl+'/v1/trading/order_history';
 				opt.qs.limit = limit;
 				opt.headers.authorization = options.apiKey;
 			

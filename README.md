@@ -1,20 +1,29 @@
 [![NPM](https://nodei.co/npm/node-cobinhood-api.png?compact=true)](https://npmjs.org/package/node-cobinhood-api)
 
 # Node Cobinhood API
-A simple to use Node.js library for Cobinhood The World's First ZERO Trading Fees Cryptocurrency Exchange.
+A simple to use Node.js library for [Cobinhood](https://cobinhood.com) The World's First ZERO Trading Fees Cryptocurrency Exchange.
+
+> NOTE: COBINHOOD IS CURRENTLY UNDER HEAVY DEVELOPMENT,
+> APIs ARE SUBJECT TO CHANGE WITHOUT PRIOR NOTICE
+
+[Cobinhood API documentation](https://cobinhood.github.io/api-public)
+
+## Getting started
 
 #### Installation
 ```js
 npm install node-cobinhood-api
 ```
 
-#### Getting started
+#### Main setup
 ```js
 const cobinhood = require('node-cobinhood-api');
 cobinhood.options({
 	'apiKey': '<api key>'
 });
 ```
+
+## Public API
 
 #### Get latest price of a symbol
 ```js
@@ -66,7 +75,7 @@ cobinhood.orderBook("COB-BTC", (error, orderBook) => {
 ```
 </details>
 
-#### Get All Currencies
+#### Get all currencies
 Returns info for all currencies available for trade
 ```js
 cobinhood.currencies((error, currencies) => {
@@ -90,7 +99,7 @@ cobinhood.currencies((error, currencies) => {
     min_unit: '0.00000001',
     deposit_fee: '0',
     withdrawal_fee: '43.39' },
-    ...
+  ...
 ]
 ```
 </details>
@@ -120,7 +129,7 @@ cobinhood.tradingPairs((error, tradingPairs) => {
     base_max_size: '5165662.806',
     base_min_size: '154.969',
     quote_increment: '0.0000001' },
-    ...
+  ...
 ]
 ```
 </details>
@@ -194,7 +203,7 @@ cobinhood.ticker("COB-BTC", (error, ticker) => {
 #### Get recent trades
 Returns most recent trades for the specified trading pair
 ```js
-let limit = 2; // Optional. Defaults to 20 if not specified, maximum 50.
+let limit = 2; // Optional. Defaults to 20 if not specified, max 50.
 cobinhood.trades("COB-BTC", (error, trades) => {
 	if (!error) {
 		console.log(trades);
@@ -270,3 +279,334 @@ cobinhood.candles("COB-BTC", timeframe, (error, candles) => {
     low: '0.00001631' } ]
 ```
 </details>
+
+## Trading API
+
+#### Place a LIMIT BUY order
+```js
+let price = 0.000017;
+let quantity = 1000;
+cobinhood.limitBuy("COB-BTC", price, quantity, (error, order) => {
+    if (!error) {
+        console.log(order);
+    }
+});
+```
+
+<details>
+<summary>Response</summary>
+
+```js
+{ id: '37f550a2-2aa6-20f4-a3fe-e120f420637c',
+  trading_pair: 'COB-BTC',
+  side: 'bid',
+  type: 'limit',
+  price: '0.000017',
+  size: '1000',
+  filled: '0',
+  state: 'queued',
+  timestamp: 1519314758661,
+  eq_price: '0',
+  completed_at: null }
+```
+</details>
+
+#### Place a LIMIT SELL order
+```js
+let price = 0.000017;
+let quantity = 1000;
+cobinhood.limitSell("COB-BTC", price, quantity, (error, order) => {
+    if (!error) {
+        console.log(order);
+    }
+});
+```
+
+<details>
+<summary>Response</summary>
+
+```js
+{ id: '37f550a2-2aa6-20f4-a3fe-e120f420637c',
+  trading_pair: 'COB-BTC',
+  side: 'ask',
+  type: 'limit',
+  price: '0.000017',
+  size: '1000',
+  filled: '0',
+  state: 'queued',
+  timestamp: 1519314758661,
+  eq_price: '0',
+  completed_at: null }
+```
+</details>
+
+#### Place a MARKET BUY order
+```js
+let quantity = 1000;
+cobinhood.marketBuy("COB-BTC", quantity, (error, order) => {
+    if (!error) {
+        console.log(order);
+    }
+});
+```
+
+<details>
+<summary>Response</summary>
+
+```js
+{ id: '37f550a2-2aa6-20f4-a3fe-e120f420637c',
+  trading_pair: 'COB-BTC',
+  side: 'bid',
+  type: 'market',
+  price: '0',
+  size: '1000',
+  filled: '0',
+  state: 'queued',
+  timestamp: 1519314758661,
+  eq_price: '0',
+  completed_at: null }
+```
+</details>
+
+#### Place a MARKET SELL order
+```js
+let quantity = 1000;
+cobinhood.marketSell("COB-BTC", quantity, (error, order) => {
+    if (!error) {
+        console.log(order);
+    }
+});
+```
+
+<details>
+<summary>Response</summary>
+
+```js
+{ id: '37f550a2-2aa6-20f4-a3fe-e120f420637c',
+  trading_pair: 'COB-BTC',
+  side: 'ask',
+  type: 'market',
+  price: '0',
+  size: '1000',
+  filled: '0',
+  state: 'queued',
+  timestamp: 1519314758661,
+  eq_price: '0',
+  completed_at: null }
+```
+</details>
+
+#### Get order status
+```js
+let orderId = '37f550a2-2aa6-20f4-a3fe-e120f420637c';
+cobinhood.orderStatus(orderId, (error, order) => {
+    if (!error) {
+        console.log(order);
+    }
+});
+```
+
+<details>
+<summary>Response</summary>
+
+```js
+{ id: '37f550a2-2aa6-20f4-a3fe-e120f420637c',
+  trading_pair: 'COB-BTC',
+  side: 'bid',
+  type: 'market',
+  price: '0',
+  size: '1000',
+  filled: '0',
+  state: 'rejected',
+  timestamp: 1519314758661,
+  eq_price: '0',
+  completed_at: '2018-02-22T16:42:38.716476Z' }
+```
+</details>
+
+#### Cancel order
+```js
+let orderId = '37f550a2-2aa6-20f4-a3fe-e120f420637c';
+cobinhood.orderCancel(orderId, (error, success) => {
+    if (!error && success) {
+        console.log("Order canceled");
+        // Order canceled
+    }
+});
+```
+
+#### Get open orders of a symbol
+```js
+let limit = 2; // Optional. Defaults to 20 if not specified, max 50.
+cobinhood.orders("COB-ETH", (error, orders) => {
+    if (!error) {
+        console.log(orders);
+    }
+}, limit);
+```
+
+<details>
+<summary>Response</summary>
+
+```js
+[ { id: 'ccb0c81c-08be-4df5-afe4-18039fd533ed',
+    trading_pair: 'COB-ETH',
+    side: 'bid',
+    type: 'limit',
+    price: '0.0001',
+    size: '200',
+    filled: '0',
+    state: 'open',
+    timestamp: 1519322294967,
+    eq_price: '0',
+    completed_at: null } ]
+```
+</details>
+
+#### Get all open orders
+```js
+let limit = 2; // Optional. Defaults to 20 if not specified, max 50.
+cobinhood.ordersAll((error, orders) => {
+    if (!error) {
+        console.log(orders);
+    }
+}, limit);
+```
+
+<details>
+<summary>Response</summary>
+
+```js
+[ { id: 'a0338ca4-689f-4698-b5cb-961f515243a9',
+    trading_pair: 'BRD-ETH',
+    side: 'bid',
+    type: 'limit',
+    price: '0.0004',
+    size: '40',
+    filled: '0',
+    state: 'open',
+    timestamp: 1519322329670,
+    eq_price: '0',
+    completed_at: null },
+  { id: 'ccb0c81c-08be-4df5-afe4-18039fd533ed',
+    trading_pair: 'COB-ETH',
+    side: 'bid',
+    type: 'limit',
+    price: '0.0001',
+    size: '200',
+    filled: '0',
+    state: 'open',
+    timestamp: 1519322294967,
+    eq_price: '0',
+    completed_at: null } ]
+```
+</details>
+
+#### Get order trades
+```js
+let orderId = '37f550a2-2aa6-20f4-a3fe-e120f420637c';
+cobinhood.orderTrades(orderId, (error, orderTrades) => {
+    if (!error) {
+        console.log(orderTrades);
+    }
+});
+```
+
+<details>
+<summary>Response</summary>
+
+```js
+[ { id: '09619448e48a3bd73d493a4194f9020b',
+    price: '10.00000000',
+    size: '0.01000000',
+    maker_side: 'bid',
+    timestamp: 1504459805123 },
+  { id: '943829d8798d7d9s87984787d89799dd',
+    price: '10.00000000',
+    size: '0.05000000',
+    maker_side: 'bid',
+    timestamp: 1504459815765 } ]
+```
+</details>
+
+#### Get order history of a symbol
+```js
+let limit = 2; // Optional. Defaults to 50 if not specified.
+cobinhood.orderHistory("COB-BTC", (error, orderHistory) => {
+    if (!error) {
+        console.log(orderHistory);
+    }
+}, limit);
+```
+
+<details>
+<summary>Response</summary>
+
+```js
+[ { id: '37f550a2-2aa6-20f4-a3fe-e120f420637c',
+    trading_pair: 'COB-BTC',
+    side: 'ask',
+    type: 'limit',
+    price: '0.000017',
+    size: '1000',
+    filled: '0',
+    state: 'cancelled',
+    timestamp: 1519321076327,
+    eq_price: '0',
+    completed_at: '2018-02-22T17:38:25.325001Z' },
+  { id: 'e120f420-2aa6-20f4-a3fe-37f550a2637c',
+    trading_pair: 'COB-BTC',
+    side: 'bid',
+    type: 'limit',
+    price: '0.000017',
+    size: '1000',
+    filled: '1000',
+    state: 'filled',
+    timestamp: 1519320455598,
+    eq_price: '0',
+    completed_at: '2018-02-22T17:35:30.412993Z' } ]
+```
+</details>
+
+#### Get all order history
+```js
+let limit = 2; // Optional. Defaults to 50 if not specified.
+cobinhood.orderHistoryAll((error, orderHistoryAll) => {
+    if (!error) {
+        console.log(orderHistoryAll);
+    }
+}, limit);
+```
+
+<details>
+<summary>Response</summary>
+
+```js
+[ { id: 'fab424b8-10d0-4d0b-9407-a5262a1b2860',
+    trading_pair: 'COB-ETH',
+    side: 'bid',
+    type: 'limit',
+    price: '0.0002089',
+    size: '200',
+    filled: '200',
+    state: 'filled',
+    timestamp: 1519321698331,
+    eq_price: '0.0002089',
+    completed_at: '2018-02-22T17:53:16.55734Z' },
+  { id: '37f550a2-2aa6-20f4-a3fe-e120f420637c',
+    trading_pair: 'COB-BTC',
+    side: 'ask',
+    type: 'limit',
+    price: '0.000017',
+    size: '1000',
+    filled: '0',
+    state: 'cancelled',
+    timestamp: 1519321076327,
+    eq_price: '0',
+    completed_at: '2018-02-22T17:38:25.325001Z' } ]
+```
+</details>
+
+## Todos
+ - Websockets
+ - Wallet API
