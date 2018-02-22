@@ -1,3 +1,11 @@
+/* ============================================================
+ * node-cobinhood-api
+ * https://github.com/buzorin/node-cobinhood-api
+ * ============================================================
+ * Copyright 2018-, Konstantin Buzorin
+ * Released under the MIT License
+ * ============================================================ */
+
 module.exports = function() {
 	'use strict';
 	const request   = require('request');
