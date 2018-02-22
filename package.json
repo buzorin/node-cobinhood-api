@@ -1,6 +1,6 @@
 {
   "name": "node-cobinhood-api",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "A simple to use Node.js library for Cobinhood The World's First ZERO Trading Fees Cryptocurrency Exchange.",
   "main": "node-cobinhood-api.js",
   "author": "Konstantin Buzorin",

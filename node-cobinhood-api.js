@@ -241,7 +241,7 @@ module.exports = function() {
 				return callback(false, result);
 			});
 		},
-		orders: function(symbol, callback, limit = 20) {
+		openOrders: function(symbol, callback, limit = 20) {
 			let opt = defaultRequestOpt;
 				opt.url = baseUrl+'/v1/trading/orders';
 				opt.qs.trading_pair_id = symbol;
@@ -259,7 +259,7 @@ module.exports = function() {
 				return callback(false, result);
 			});
 		},
-		ordersAll: function(callback, limit = 20) {
+		openOrdersAll: function(callback, limit = 20) {
 			let opt = defaultRequestOpt;
 				opt.url = baseUrl+'/v1/trading/orders';
 				opt.qs.limit = limit;

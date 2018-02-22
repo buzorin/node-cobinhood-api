@@ -438,9 +438,9 @@ cobinhood.orderCancel(orderId, (error, success) => {
 #### Get open orders of a symbol
 ```js
 let limit = 2; // Optional. Defaults to 20 if not specified, max 50.
-cobinhood.orders("COB-ETH", (error, orders) => {
+cobinhood.openOrders("COB-ETH", (error, openOrders) => {
     if (!error) {
-        console.log(orders);
+        console.log(openOrders);
     }
 }, limit);
 ```
@@ -466,9 +466,9 @@ cobinhood.orders("COB-ETH", (error, orders) => {
 #### Get all open orders
 ```js
 let limit = 2; // Optional. Defaults to 20 if not specified, max 50.
-cobinhood.ordersAll((error, orders) => {
+cobinhood.openOrdersAll((error, openOrdersAll) => {
     if (!error) {
-        console.log(orders);
+        console.log(openOrdersAll);
     }
 }, limit);
 ```
