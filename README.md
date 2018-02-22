@@ -1,8 +1,16 @@
+[![NPM](https://nodei.co/npm/node-cobinhood-api.png?compact=true)](https://npmjs.org/package/node-cobinhood-api)
+
 # Node Cobinhood API
 A simple to use Node.js library for Cobinhood The World's First ZERO Trading Fees Cryptocurrency Exchange.
 
-#### Set API key
+#### Installation
 ```js
+npm install node-cobinhood-api
+```
+
+#### Getting started
+```js
+const cobinhood = require('node-cobinhood-api');
 cobinhood.options({
 	'apiKey': '<api key>'
 });
