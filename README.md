@@ -8,6 +8,42 @@ A simple to use Node.js library for [Cobinhood](https://cobinhood.com) The World
 
 [Cobinhood API documentation](https://cobinhood.github.io/api-public)
 
+## Table of Contents
+
+* [Getting started](#getting-started)
+  + [Installation](#installation)
+  + [Main setup](#main-setup)
+* [Public API](#public-api)
+  + [Get latest price of a symbol](#get-latest-price-of-a-symbol)
+  + [Get depth of a symbol](#get-depth-of-a-symbol)
+  + [Get all currencies](#get-all-currencies)
+  + [Get info for all trading pairs](#get-info-for-all-trading-pairs)
+  + [Get trading statistics](#get-trading-statistics)
+  + [Get ticker of a symbol](#get-ticker-of-a-symbol)
+  + [Get recent trades of a symbol](#get-recent-trades-of-a-symbol)
+  + [Get candles of a symbol](#get-candles-of-a-symbol)
+  + [Get server time](#get-server-time)
+  + [Get server information](#get-server-information)
+* [Trading API](#trading-api)
+  + [Place a LIMIT BUY order](#place-a-limit-buy-order)
+  + [Place a LIMIT SELL order](#place-a-limit-sell-order)
+  + [Place a MARKET BUY order](#place-a-market-buy-order)
+  + [Place a MARKET SELL order](#place-a-market-sell-order)
+  + [Get order status](#get-order-status)
+  + [Cancel order](#cancel-order)
+  + [Get open orders of a symbol](#get-open-orders-of-a-symbol)
+  + [Get all open orders](#get-all-open-orders)
+  + [Get order trades](#get-order-trades)
+  + [Get order history of a symbol](#get-order-history-of-a-symbol)
+  + [Get all order history](#get-all-order-history)
+* [Websockets](#websockets)
+  + [Get trade updates of a symbol](#get-trade-updates-of-a-symbol)
+  + [Get order book updates of a symbol](#get-order-book-updates-of-a-symbol)
+  + [Get ticker updates of a symbol](#get-ticker-updates-of-a-symbol)
+  + [Get candle updates of a symbol](#get-candle-updates-of-a-symbol)
+  + [Get your's open orders updates](#get-yours-open-orders-updates)
+  + [Subscribe to several websocket channels at once](#subscribe-to-several-websocket-channels-at-once)
+
 ## Getting started
 
 #### Installation
