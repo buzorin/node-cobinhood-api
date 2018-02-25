@@ -19,7 +19,8 @@ npm install node-cobinhood-api
 ```js
 const cobinhood = require('node-cobinhood-api');
 cobinhood.options({
-	'apiKey': '<api key>'
+    'apiKey': '<api key>',
+    'verbose': true
 });
 ```
 
@@ -28,10 +29,10 @@ cobinhood.options({
 #### Get latest price of a symbol
 ```js
 cobinhood.lastPrice("COB-BTC", (error, lastPrice) => {
-	if (!error) {
-		console.log("COB-BTC last price:", lastPrice);
-		// COB-BTC last price: 0.00001687
-	}
+    if (!error) {
+        console.log("COB-BTC last price:", lastPrice);
+        // COB-BTC last price: 0.00001687
+    }
 });
 ```
 
@@ -39,9 +40,9 @@ cobinhood.lastPrice("COB-BTC", (error, lastPrice) => {
 ```js
 let limit = 10; // Optional. Defaults to 50 if not specified, if limit is 0, it means to fetch the whole order book.
 cobinhood.orderBook("COB-BTC", (error, orderBook) => {
-	if (!error) {
-		console.log(orderBook);
-	}
+    if (!error) {
+        console.log(orderBook);
+    }
 }, limit);
 ```
 
@@ -79,9 +80,9 @@ cobinhood.orderBook("COB-BTC", (error, orderBook) => {
 Returns info for all currencies available for trade
 ```js
 cobinhood.currencies((error, currencies) => {
-	if (!error) {
-		console.log(currencies);
-	}
+    if (!error) {
+        console.log(currencies);
+    }
 });
 ```
 
@@ -107,9 +108,9 @@ cobinhood.currencies((error, currencies) => {
 #### Get info for all trading pairs
 ```js
 cobinhood.tradingPairs((error, tradingPairs) => {
-	if (!error) {
-		console.log(tradingPairs);
-	}
+    if (!error) {
+        console.log(tradingPairs);
+    }
 });
 ```
 
@@ -137,9 +138,9 @@ cobinhood.tradingPairs((error, tradingPairs) => {
 #### Get trading statistics
 ```js
 cobinhood.stats((error, stats) => {
-	if (!error) {
-		console.log(stats);
-	}
+    if (!error) {
+        console.log(stats);
+    }
 });
 ```
 
@@ -174,13 +175,12 @@ cobinhood.stats((error, stats) => {
 ```
 </details>
 
-#### Get ticker
-Returns ticker for specified trading pair
+#### Get ticker of a symbol
 ```js
 cobinhood.ticker("COB-BTC", (error, ticker) => {
-	if (!error) {
-		console.log(ticker);
-	}
+    if (!error) {
+        console.log(ticker);
+    }
 });
 ```
 
@@ -200,14 +200,13 @@ cobinhood.ticker("COB-BTC", (error, ticker) => {
 ```
 </details>
 
-#### Get recent trades
-Returns most recent trades for the specified trading pair
+#### Get recent trades of a symbol
 ```js
 let limit = 2; // Optional. Defaults to 20 if not specified, max 50.
 cobinhood.trades("COB-BTC", (error, trades) => {
-	if (!error) {
-		console.log(trades);
-	}
+    if (!error) {
+        console.log(trades);
+    }
 }, limit);
 ```
 
@@ -228,16 +227,15 @@ cobinhood.trades("COB-BTC", (error, trades) => {
 ```
 </details>
 
-#### Get candles
-Returns charting candles for the specified trading pair
+#### Get candles of a symbol
 ```js
 let timeframe = '5m'; // Timeframes: 1m, 5m, 15m, 30m, 1h, 3h, 6h, 12h, 1D, 7D, 14D, 1M
 let startTime = 1519307723000; // Optional. Unix timestamp in milliseconds. Defaults to 0 if not specified.
 let endTime   = 1519308723000; // Optional. Unix timestamp in milliseconds. Defaults to current server time if not specified.
 cobinhood.candles("COB-BTC", timeframe, (error, candles) => {
-	if (!error) {
-		console.log(candles);
-	}
+    if (!error) {
+        console.log(candles);
+    }
 }, endTime, startTime);
 ```
 
@@ -277,6 +275,34 @@ cobinhood.candles("COB-BTC", timeframe, (error, candles) => {
     close: '0.00001631',
     high: '0.00001631',
     low: '0.00001631' } ]
+```
+</details>
+
+#### Get server time
+Returns server Unix timestamp in milliseconds
+```js
+cobinhood.serverTime((error, serverTime) => {
+    if (!error) {
+        console.log("Server time:", serverTime);
+        // Server time: 1519570081809
+    }
+});
+```
+
+#### Get server information
+```js
+cobinhood.serverInfo((error, serverInfo) => {
+    if (!error) {
+        console.log(serverInfo);
+    }
+});
+```
+
+<details>
+<summary>Response</summary>
+
+```js
+{ phase: 'production', revision: 'aa77d8' }
 ```
 </details>
 
@@ -429,8 +455,8 @@ cobinhood.orderStatus(orderId, (error, order) => {
 let orderId = '37f550a2-2aa6-20f4-a3fe-e120f420637c';
 cobinhood.orderCancel(orderId, (error, success) => {
     if (!error && success) {
-        console.log("Order canceled");
-        // Order canceled
+        console.log("Order cancelled");
+        // Order cancelled
     }
 });
 ```
@@ -607,6 +633,276 @@ cobinhood.orderHistoryAll((error, orderHistoryAll) => {
 ```
 </details>
 
+## Websockets
+
+#### Get trade updates of a symbol
+Returns two types of messages: "snapshot" and "update"
+```js
+let channel = {
+    "type": 'trade',
+    "trading_pair_id": 'COB-BTC'
+};
+let reconnect = false; // Optional. Default to true if not specified.
+cobinhood.websocket(channel, (error, message) => {
+    if (!error) {
+        console.log(message);
+    }
+}, reconnect);
+```
+
+<details>
+<summary>Response (snapshot)</summary>
+
+```js
+{
+    "channel_id": CHANNEL_ID,
+    "snapshot":
+        [
+          [TRADE_ID, TIME_STAMP, PRICE, SIZE, MAKER_SIDE],
+          ...
+        ]
+}
+```
+</details>
+
+<details>
+<summary>Response (update)</summary>
+
+```js
+{
+    "channel_id": CHANNEL_ID,
+    "update":
+        [
+          [TRADE_ID, TIME_STAMP, PRICE, SIZE, MAKER_SIDE],
+          ...
+        ]
+}
+```
+</details>
+
+#### Get order book updates of a symbol
+Returns two types of messages: "snapshot" and "update"
+```js
+let channel = {
+    "type": 'order-book',
+    "trading_pair_id": 'COB-BTC',
+    "precision": '1E-7' // Optional. Default to 1E-7 if not specified.
+};
+let reconnect = false; // Optional. Default to true if not specified.
+cobinhood.websocket(channel, (error, message) => {
+    if (!error) {
+        console.log(message);
+    }
+}, reconnect);
+```
+
+<details>
+<summary>Response (snapshot)</summary>
+
+```js
+{
+    "channel_id": CHANNEL_ID,
+    "snapshot":  {
+        "bids": [
+            [ PRICE, SIZE, COUNT ],
+            ...
+        ],
+        "asks": [
+            [ PRICE, SIZE, COUNT ],
+            ...
+        ]
+    }
+}
+```
+</details>
+
+<details>
+<summary>Response (update)</summary>
+
+```js
+{
+    "channel_id": CHANNEL_ID,
+    "update":  {
+        "bids": [
+            [ PRICE, SIZE, COUNT ],
+            ...
+        ],
+        "asks": [
+            [ PRICE, SIZE, COUNT ],
+            ...
+        ]
+    }
+}
+```
+</details>
+
+#### Get ticker updates of a symbol
+Returns two types of messages: "snapshot" and "update"
+```js
+let channel = {
+    "type": 'ticker',
+    "trading_pair_id": 'COB-BTC'
+};
+let reconnect = false; // Optional. Default to true if not specified.
+cobinhood.websocket(channel, (error, message) => {
+    if (!error) {
+        console.log(message);
+    }
+}, reconnect);
+```
+
+<details>
+<summary>Response (snapshot)</summary>
+
+```js
+{
+    "channel_id": CHANNEL_ID,
+    "snapshot":
+        [
+          LAST_TRADE_ID,
+          PRICE,
+          HIGHEST_BID,
+          LOWEST_ASK,
+          24H_VOLUME,
+          24H_HIGH,
+          24H_LOW,
+          24H_OPEN,
+          TIME_STAMP,
+        ]
+}
+```
+</details>
+
+<details>
+<summary>Response (update)</summary>
+
+```js
+{
+    "channel_id": CHANNEL_ID,
+    "update":
+        [
+          LAST_TRADE_ID,
+          PRICE,
+          HIGHEST_BID,
+          LOWEST_ASK,
+          24H_VOLUME,
+          24H_HIGH,
+          24H_LOW,
+          24H_OPEN,
+          TIME_STAMP,
+        ]
+}
+```
+</details>
+
+#### Get candle updates of a symbol
+Returns two types of messages: "snapshot" and "update"
+```js
+let channel = {
+    "type": 'candle',
+    "trading_pair_id": 'COB-BTC',
+    "timeframe": '5m'
+};
+let reconnect = false; // Optional. Default to true if not specified.
+cobinhood.websocket(channel, (error, message) => {
+    if (!error) {
+        console.log(message);
+    }
+}, reconnect);
+```
+
+<details>
+<summary>Response (snapshot)</summary>
+
+```js
+{
+    "channel_id": CHANNEL_ID,
+    "snapshot":
+        [
+          [TIME, OPEN, CLOSE, HIGH, LOW, VOL],
+          ...
+        ]
+}
+```
+</details>
+
+<details>
+<summary>Response (update)</summary>
+
+```js
+{
+    "channel_id": CHANNEL_ID,
+    "update":
+        [
+          [TIME, OPEN, CLOSE, HIGH, LOW, VOL],
+          ...
+        ]
+}
+```
+</details>
+
+#### Get your's open orders updates
+```js
+let channel = {
+    "type": 'order'
+};
+let reconnect = false; // Optional. Default to true if not specified.
+cobinhood.websocket(channel, (error, message) => {
+    if (!error) {
+        console.log(message);
+    }
+}, reconnect);
+```
+
+<details>
+<summary>Response</summary>
+
+```js
+{
+    "channel_id": CHANNEL_ID,
+    "update":
+        [
+            ORDER_ID,
+            TRADING_PAIR_ID,
+            STATUS,
+            SIDE,
+            TYPE,
+            PRICE,
+            SIZE,
+            FILLED_SIZE,
+            TIME_STAMP
+         ]
+}
+```
+</details>
+
+#### Subscribe to several websocket channels at once
+You can subscribe to different types of channels and/or different symbols
+```js
+let channels = [{
+    "type": 'trade',
+    "trading_pair_id": 'COB-BTC'
+},{
+    "type": 'order-book',
+    "trading_pair_id": 'COB-BTC',
+    "precision": '1E-7' // Optional. Default to 1E-7 if not specified.
+},{
+    "type": 'ticker',
+    "trading_pair_id": 'COB-BTC'
+},{
+    "type": 'candle',
+    "trading_pair_id": 'COB-BTC',
+    "timeframe": '5m'
+},{
+    "type": 'order'
+}];
+let reconnect = false; // Optional. Default to true if not specified.
+cobinhood.websocket(channels, (error, message) => {
+    if (!error) {
+        console.log(message);
+    }
+}, reconnect);
+```
+
 ## Todos
- - Websockets
  - Wallet API

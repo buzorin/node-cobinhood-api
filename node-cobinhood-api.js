@@ -14,6 +14,7 @@ module.exports = function() {
 	const streamUrl = 'wss://feed.cobinhood.com/ws';
 	
 	const defaultOptions = {
+		verbose: false,
 		requestTimeout: 30000
 	};
 
@@ -55,11 +56,59 @@ module.exports = function() {
 		});
 	};
 
+	const handleWebSocketEventMessage = function(message) {
+		if (options.verbose) {
+			switch (message.event) {
+				case 'subscribed':
+					console.log('Websocket channel subscribed:', message.channel_id);
+					break;
+				case 'unsubscribed':
+					console.log('Websocket channel unsubscribed:', message.channel_id);
+					break;
+				case 'error':
+					console.log('Websocket error message:', message);
+					break;
+				default:
+					console.log('Websocket event message:', message);
+			}
+		}
+	};
+
 	return {
 		options: function(opts) {
 			for (let opt in opts) {
 				options[opt] = opts[opt];
 			}
+		},
+		serverTime: function(callback) {
+			let opt = defaultRequestOpt;
+				opt.url = baseUrl+'/v1/system/time';
+
+			request(opt, function(error, response, body) {
+				if (error)
+					return callback(error);
+
+				if (response && response.statusCode !== 200)
+					return callback(JSON.parse(response.body).error.error_code);
+
+				let result = JSON.parse(body).result.time;
+				return callback(false, result);
+			});
+		},
+		serverInfo: function(callback) {
+			let opt = defaultRequestOpt;
+				opt.url = baseUrl+'/v1/system/info';
+
+			request(opt, function(error, response, body) {
+				if (error)
+					return callback(error);
+
+				if (response && response.statusCode !== 200)
+					return callback(JSON.parse(response.body).error.error_code);
+
+				let result = JSON.parse(body).result.info;
+				return callback(false, result);
+			});
 		},
 		currencies: function(callback) {
 			let opt = defaultRequestOpt;
@@ -340,6 +389,72 @@ module.exports = function() {
 		},
 		marketSell: function(symbol, quantity, callback) {
 			placeOrder(symbol, '', quantity, 'ask', 'market', callback);
+		},
+		websocket: function subscribeWebSocket(channels, callback, reconnect = true) {
+			if (!Array.isArray(channels))
+				channels = [channels];
+
+			const ws = new WebSocket(streamUrl, {
+				'headers': {
+					'authorization': options.apiKey
+				}
+			});
+	
+			ws.on('open', function() {
+				if (options.verbose)
+					console.log('Websocket connected');
+				ws.isAlive = true;
+				ws.pingInterval = setInterval(function() {
+					if (ws.isAlive) {
+						ws.isAlive = false;
+						ws.send('{"action":"ping"}', function(error) {
+							if (error)
+								console.log(error);
+						});
+					} else {
+						console.log('Websocket not response, terminating connection');
+						ws.terminate();
+					}
+				}, 30000);
+	
+				channels.forEach(function(channel) {
+					channel.action = 'subscribe';
+					ws.send(JSON.stringify(channel), function(error) {
+						if (error)
+							console.log(error);
+					});
+				});
+			});
+	
+			ws.on('close', function() {
+				clearInterval(ws.pingInterval);
+
+				if (options.verbose)
+					console.log('Websocket connection closed');
+
+				if (reconnect) {
+					if (options.verbose)
+						console.log('Reconnecting websocket...');
+					subscribeWebSocket(channels, callback);
+				}
+			});
+	
+			ws.on('message', function(message) {
+				try {
+					message = JSON.parse(message);
+					if ('pong' === message.event) {
+						ws.isAlive = true;
+					} else if (message.event) {
+						handleWebSocketEventMessage(message);
+					} else {
+						callback(false, message);
+					}
+				} catch (error) {
+					callback(error);
+				}
+			});
+	
+			return ws;
 		}
 	};
 }();
