@@ -1,6 +1,6 @@
 [![NPM](https://nodei.co/npm/node-cobinhood-api.png?compact=true)](https://npmjs.org/package/node-cobinhood-api)
 
-# Node Cobinhood API
+# Node Cobinhood API  [![NPM downloads](https://img.shields.io/npm/dt/node-cobinhood-api.svg?style=flat-square&maxAge=3600)](https://www.npmjs.com/package/node-cobinhood-api)
 A simple to use Node.js library for [Cobinhood](https://cobinhood.com) The World's First ZERO Trading Fees Cryptocurrency Exchange.
 
 > NOTE: COBINHOOD IS CURRENTLY UNDER HEAVY DEVELOPMENT,
@@ -8,7 +8,7 @@ A simple to use Node.js library for [Cobinhood](https://cobinhood.com) The World
 
 [Cobinhood API documentation](https://cobinhood.github.io/api-public)
 
-## Table of Contents
+### Table of contents
 
 * [Getting started](#getting-started)
   + [Installation](#installation)
@@ -31,11 +31,24 @@ A simple to use Node.js library for [Cobinhood](https://cobinhood.com) The World
   + [Place a MARKET SELL order](#place-a-market-sell-order)
   + [Get order status](#get-order-status)
   + [Cancel order](#cancel-order)
+  + [Modify order](#modify-order)
   + [Get open orders of a symbol](#get-open-orders-of-a-symbol)
   + [Get all open orders](#get-all-open-orders)
   + [Get order trades](#get-order-trades)
   + [Get order history of a symbol](#get-order-history-of-a-symbol)
   + [Get all order history](#get-all-order-history)
+* [Wallet API](#wallet-api)
+  + [Get wallet balances](#get-wallet-balances)
+  + [Get balance history of a currency](#get-balance-history-of-a-currency)
+  + [Get all balance history](#get-all-balance-history)
+  + [Get deposit address of a currency](#get-deposit-address-of-a-currency)
+  + [Get all deposit addresses](#get-all-deposit-addresses)
+  + [Get deposit status](#get-deposit-status)
+  + [Get all deposits](#get-all-deposits)
+  + [Get withdrawal addresses of a currency](#get-withdrawal-addresses-of-a-currency)
+  + [Get all withdrawal addresses](#get-all-withdrawal-addresses)
+  + [Get withdrawal status](#get-withdrawal-status)
+  + [Get all withdrawals](#get-all-withdrawals)
 * [Websockets](#websockets)
   + [Get trade updates of a symbol](#get-trade-updates-of-a-symbol)
   + [Get order book updates of a symbol](#get-order-book-updates-of-a-symbol)
@@ -43,6 +56,7 @@ A simple to use Node.js library for [Cobinhood](https://cobinhood.com) The World
   + [Get candle updates of a symbol](#get-candle-updates-of-a-symbol)
   + [Get your's open orders updates](#get-yours-open-orders-updates)
   + [Subscribe to several websocket channels at once](#subscribe-to-several-websocket-channels-at-once)
+
 
 ## Getting started
 
@@ -497,6 +511,19 @@ cobinhood.orderCancel(orderId, (error, success) => {
 });
 ```
 
+#### Modify order
+```js
+let orderId = '37f550a2-2aa6-20f4-a3fe-e120f420637c';
+let price = 0.000018;
+let quantity = 1000;
+cobinhood.orderModify(orderId, price, quantity, (error, success) => {
+    if (!error && success) {
+        console.log("Order modified");
+        // Order modified
+    }
+});
+```
+
 #### Get open orders of a symbol
 ```js
 let limit = 2; // Optional. Defaults to 20 if not specified, max 50.
@@ -669,6 +696,371 @@ cobinhood.orderHistoryAll((error, orderHistoryAll) => {
 ```
 </details>
 
+## Wallet API
+
+#### Get wallet balances
+```js
+cobinhood.balances((error, balances) => {
+    if (!error) {
+        console.log(balances);
+    }
+});
+```
+
+<details>
+<summary>Response</summary>
+
+```js
+[ { currency: 'BTC',
+    type: 'exchange',
+    total: '0',
+    on_order: '0',
+    locked: false },
+  { currency: 'ETH',
+    type: 'exchange',
+    total: '0.09849225',
+    on_order: '0.04',
+    locked: false },
+  { currency: 'COB',
+    type: 'exchange',
+    total: '2000',
+    on_order: '0',
+    locked: false } ]
+```
+</details>
+
+#### Get balance history of a currency
+```js
+let limit = 3; // Defaults to 20 if not specified, max 50.
+cobinhood.balanceHistory("ETH", (error, balanceHistory) => {
+    if (!error) {
+        console.log(balanceHistory);
+    }
+}, limit);
+```
+
+<details>
+<summary>Response</summary>
+
+```js
+[ { timestamp: '2018-02-27T03:11:45.132432Z',
+    currency: 'ETH',
+    type: 'exchange',
+    action: 'withdraw',
+    amount: '0.000543',
+    balance: '0',
+    trade_id: null,
+    deposit_id: null,
+    withdrawal_id: '09619448-985d-4485-835e-b69096194482',
+    fiat_deposit_id: null,
+    fiat_withdrawal_id: null },
+  { timestamp: '2018-02-26T23:14:08.435243Z',
+    currency: 'ETH',
+    type: 'exchange',
+    action: 'trade',
+    amount: '0.000543',
+    balance: '0.050543',
+    trade_id: '09619448-985d-4485-835e-b69096194482',
+    deposit_id: null,
+    withdrawal_id: null,
+    fiat_deposit_id: null,
+    fiat_withdrawal_id: null },
+  { timestamp: '2018-02-26T17:18:59.428914Z',
+    currency: 'ETH',
+    type: 'exchange',
+    action: 'deposit',
+    amount: '0.05',
+    balance: '0.05',
+    trade_id: null,
+    deposit_id: '09619448-985d-4485-835e-b69096194482',
+    withdrawal_id: null,
+    fiat_deposit_id: null,
+    fiat_withdrawal_id: null } ]
+```
+</details>
+
+#### Get all balance history
+```js
+let limit = 3; // Defaults to 20 if not specified, max 50.
+cobinhood.balanceHistoryAll((error, balanceHistoryAll) => {
+    if (!error) {
+        console.log(balanceHistoryAll);
+    }
+}, limit);
+```
+
+<details>
+<summary>Response</summary>
+
+```js
+[ { timestamp: '2018-02-27T03:11:45.132432Z',
+    currency: 'ETH',
+    type: 'exchange',
+    action: 'withdraw',
+    amount: '0.000543',
+    balance: '0',
+    trade_id: null,
+    deposit_id: null,
+    withdrawal_id: '09619448-985d-4485-835e-b69096194482',
+    fiat_deposit_id: null,
+    fiat_withdrawal_id: null },
+  { timestamp: '2018-02-26T23:14:08.435243Z',
+    currency: 'COB',
+    type: 'exchange',
+    action: 'trade',
+    amount: '100',
+    balance: '2100',
+    trade_id: '09619448-985d-4485-835e-b69096194482',
+    deposit_id: null,
+    withdrawal_id: null,
+    fiat_deposit_id: null,
+    fiat_withdrawal_id: null },
+  { timestamp: '2018-02-26T17:18:59.428914Z',
+    currency: 'BTC',
+    type: 'exchange',
+    action: 'deposit',
+    amount: '0.05',
+    balance: '0.05',
+    trade_id: null,
+    deposit_id: '09619448-985d-4485-835e-b69096194482',
+    withdrawal_id: null,
+    fiat_deposit_id: null,
+    fiat_withdrawal_id: null } ]
+```
+</details>
+
+#### Get deposit address of a currency
+```js
+cobinhood.depositAddress("ETH", (error, depositAddress) => {
+    if (!error) {
+        console.log(depositAddress);
+    }
+});
+```
+
+<details>
+<summary>Response</summary>
+
+```js
+[ { address: '0xbcd7defe48a19f758a1c1a9706e808072391bc20',
+    created_at: 1519234408062,
+    currency: 'ETH',
+    type: 'exchange' } ]
+```
+</details>
+
+#### Get all deposit addresses
+```js
+cobinhood.depositAddressesAll((error, depositAddressesAll) => {
+    if (!error) {
+        console.log(depositAddressesAll);
+    }
+});
+```
+
+<details>
+<summary>Response</summary>
+
+```js
+[ { address: '0xbcd7defe48a19f758a1c1a9706e808072391bc20',
+    created_at: 1519234408062,
+    currency: 'ETH',
+    type: 'exchange' },
+  { address: '0xbff7defe48a09619448e48a3bd73a4194f9020b3',
+    created_at: 1519232304035,
+    currency: 'BTC',
+    type: 'exchange' },
+  ...
+]
+```
+</details>
+
+#### Get deposit status
+```js
+let depositId = '09619448-985d-4485-835e-b69096194482';
+cobinhood.depositStatus(depositId, (error, depositStatus) => {
+    if (!error) {
+        console.log(depositStatus);
+    }
+});
+```
+
+<details>
+<summary>Response</summary>
+
+```js
+{ amount: '0.05',
+  completed_at: 1519319949428,
+  confirmations: 25,
+  created_at: 1519319554624,
+  currency: 'ETH',
+  deposit_id: '09619448-985d-4485-835e-b69096194482',
+  fee: '0',
+  from_address: '0xFBb1b73C4f0BDa4f67dcA266ce6Ef42f520fBB98',
+  required_confirmations: 25,
+  status: 'tx_confirmed',
+  txhash: '0x3f694510b9fca0ce645347be2525726473b541c86f5756de9ee693005d72bb23',
+  user_id: 'efb9f645-f457-413b-b187-93cab09d8727' }
+```
+</details>
+
+#### Get all deposits
+```js
+cobinhood.deposits((error, deposits) => {
+    if (!error) {
+        console.log(deposits);
+    }
+});
+```
+
+<details>
+<summary>Response</summary>
+
+```js
+[ { amount: '0.05',
+    completed_at: 1519319949428,
+    confirmations: 25,
+    created_at: 1519319554624,
+    currency: 'ETH',
+    deposit_id: '09619448-985d-4485-835e-b69096194482',
+    fee: '0',
+    from_address: '0xFBb1b73C4f0BDa4f67dcA266ce6Ef42f520fBB98',
+    required_confirmations: 25,
+    status: 'tx_confirmed',
+    txhash: '0x3f694510b9fca0ce645347be2525726473b541c86f5756de9ee693005d72bb23',
+    user_id: 'efb9f645-f457-413b-b187-93cab09d8727' },
+  { amount: '0.2',
+    completed_at: 15193100495243,
+    confirmations: 25,
+    created_at: 1519319554624,
+    currency: 'BTC',
+    deposit_id: '74f6376d-985d-4485-835e-b69096194482',
+    fee: '0',
+    from_address: '0xFBb1b73C4f0BDa4f67dcA266ce6Ef42f520fBB98',
+    required_confirmations: 25,
+    status: 'tx_confirmed',
+    txhash: '0x3f694510b9fca0ce645347be2525726473b541c86f5756de9ee693005d72bb23',
+    user_id: 'efb9f645-f457-413b-b187-93cab09d8727' },
+  ...
+]
+```
+</details>
+
+#### Get withdrawal addresses of a currency
+```js
+cobinhood.withdrawalAddresses("ETH", (error, withdrawalAddresses) => {
+    if (!error) {
+        console.log(withdrawalAddresses);
+    }
+});
+```
+
+<details>
+<summary>Response</summary>
+
+```js
+[ { id: '6b01c8ac-3075-4ae5-a485-881d67Fe78fb',
+    name: 'Seychelles',
+    type: 'exchange',
+    currency: 'ETH',
+    address: '0xA6854dFD1BA0635f03a275ce9f3b310F52396673',
+    created_at: 1519723240162 } ]
+```
+</details>
+
+#### Get all withdrawal addresses
+```js
+cobinhood.withdrawalAddressesAll((error, withdrawalAddressesAll) => {
+    if (!error) {
+        console.log(withdrawalAddressesAll);
+    }
+});
+```
+
+<details>
+<summary>Response</summary>
+
+```js
+[ { id: '6b01c8ac-3075-4ae5-a485-881d67Fe78fb',
+    name: 'Seychelles',
+    type: 'exchange',
+    currency: 'ETH',
+    address: '0xA6854dFD1BA0635f03a275ce9f3b310F52396673',
+    created_at: 1519723240162 },
+  { id: '6b01c8ac-3075-4ae5-a485-881d67Fe78fb',
+    name: 'Wakanda',
+    type: 'exchange',
+    currency: 'BTC',
+    address: '0xA6854dFD1BA0635f03a275ce9f3b310F52396673',
+    created_at: 1519723240162 }
+  ...
+]
+```
+</details>
+
+#### Get withdrawal status
+```js
+let withdrawalId = '09619448-985d-4485-835e-b69096194482';
+cobinhood.withdrawalStatus(depositId, (error, withdrawalStatus) => {
+    if (!error) {
+        console.log(withdrawalStatus);
+    }
+});
+```
+
+<details>
+<summary>Response</summary>
+
+```js
+{ "withdrawal_id": "62056df2d4cf8fb9b15c7238b89a1438",
+  "user_id": "62056df2d4cf8fb9b15c7238b89a1438",
+  "status": "pending",
+  "confirmations": 25,
+  "required_confirmations": 25,
+  "created_at": 1504459805123,
+  "sent_at": 1504459805123
+  "completed_at": 1504459914233,
+  "updated_at": 1504459914233,
+  "to_address": "0xbcd7defe48a19f758a1c1a9706e808072391bc20",
+  "txhash": "0xf6ca576fb446893432d55ec53e93b7dcfbbf75b548570b2eb8b1853de7aa7233",
+  "currency": "BTC",
+  "amount": "0.021",
+  "fee": "0.0003" }
+```
+</details>
+
+#### Get all withdrawals
+```js
+cobinhood.withdrawals((error, withdrawals) => {
+    if (!error) {
+        console.log(withdrawals);
+    }
+});
+```
+
+<details>
+<summary>Response</summary>
+
+```js
+[ { "withdrawal_id": "62056df2d4cf8fb9b15c7238b89a1438",
+    "user_id": "62056df2d4cf8fb9b15c7238b89a1438",
+    "status": "pending",
+    "confirmations": 25,
+    "required_confirmations": 25,
+    "created_at": 1504459805123,
+    "sent_at": 1504459805123
+    "completed_at": 1504459914233,
+    "updated_at": 1504459914233,
+    "to_address": "0xbcd7defe48a19f758a1c1a9706e808072391bc20",
+    "txhash": "0xf6ca576fb446893432d55ec53e93b7dcfbbf75b548570b2eb8b1853de7aa7233",
+    "currency": "BTC",
+    "amount": "0.021",
+    "fee": "0.0003" },
+  ...
+]
+```
+</details>
+
 ## Websockets
 
 #### Get trade updates of a symbol
@@ -678,7 +1070,7 @@ let channel = {
     "type": 'trade',
     "trading_pair_id": 'COB-BTC'
 };
-let reconnect = false; // Optional. Default to true if not specified.
+let reconnect = false; // Optional. Defaults to true if not specified.
 cobinhood.websocket(channel, (error, message) => {
     if (!error) {
         console.log(message);
@@ -722,9 +1114,9 @@ Returns two types of messages: "snapshot" and "update"
 let channel = {
     "type": 'order-book',
     "trading_pair_id": 'COB-BTC',
-    "precision": '1E-7' // Optional. Default to 1E-7 if not specified.
+    "precision": '1E-7' // Optional. Defaults to 1E-7 if not specified.
 };
-let reconnect = false; // Optional. Default to true if not specified.
+let reconnect = false; // Optional. Defaults to true if not specified.
 cobinhood.websocket(channel, (error, message) => {
     if (!error) {
         console.log(message);
@@ -779,7 +1171,7 @@ let channel = {
     "type": 'ticker',
     "trading_pair_id": 'COB-BTC'
 };
-let reconnect = false; // Optional. Default to true if not specified.
+let reconnect = false; // Optional. Defaults to true if not specified.
 cobinhood.websocket(channel, (error, message) => {
     if (!error) {
         console.log(message);
@@ -837,9 +1229,9 @@ Returns two types of messages: "snapshot" and "update"
 let channel = {
     "type": 'candle',
     "trading_pair_id": 'COB-BTC',
-    "timeframe": '5m'
+    "timeframe": '5m' // Timeframes: 1m, 5m, 15m, 30m, 1h, 3h, 6h, 12h, 1D, 7D, 14D, 1M
 };
-let reconnect = false; // Optional. Default to true if not specified.
+let reconnect = false; // Optional. Defaults to true if not specified.
 cobinhood.websocket(channel, (error, message) => {
     if (!error) {
         console.log(message);
@@ -882,7 +1274,7 @@ cobinhood.websocket(channel, (error, message) => {
 let channel = {
     "type": 'order'
 };
-let reconnect = false; // Optional. Default to true if not specified.
+let reconnect = false; // Optional. Defaults to true if not specified.
 cobinhood.websocket(channel, (error, message) => {
     if (!error) {
         console.log(message);
@@ -921,18 +1313,18 @@ let channels = [{
 },{
     "type": 'order-book',
     "trading_pair_id": 'COB-BTC',
-    "precision": '1E-7' // Optional. Default to 1E-7 if not specified.
+    "precision": '1E-7' // Optional. Defaults to 1E-7 if not specified.
 },{
     "type": 'ticker',
     "trading_pair_id": 'COB-BTC'
 },{
     "type": 'candle',
     "trading_pair_id": 'COB-BTC',
-    "timeframe": '5m'
+    "timeframe": '5m' // Timeframes: 1m, 5m, 15m, 30m, 1h, 3h, 6h, 12h, 1D, 7D, 14D, 1M
 },{
     "type": 'order'
 }];
-let reconnect = false; // Optional. Default to true if not specified.
+let reconnect = false; // Optional. Defaults to true if not specified.
 cobinhood.websocket(channels, (error, message) => {
     if (!error) {
         console.log(message);
@@ -941,4 +1333,5 @@ cobinhood.websocket(channels, (error, message) => {
 ```
 
 ## Todos
- - Wallet API
+ - Examples
+ - Logs

@@ -343,6 +343,28 @@ module.exports = function() {
 				return callback(false, result);
 			});
 		},
+		orderModify: function(orderId, price, quantity, callback) {
+			let opt = defaultRequestOpt;
+				opt.method = 'PUT';
+				opt.url = baseUrl+'/v1/trading/orders/'+orderId;
+				opt.json = {
+					'price': price.toString(),
+					'size': quantity.toString()
+				};
+				opt.headers.authorization = options.apiKey;
+				opt.headers.nonce = (new Date()).getTime();
+			
+			request(opt, function(error, response, body) {
+				if (error)
+					return callback(error);
+
+				if (response && response.statusCode !== 200)
+					return callback(JSON.parse(response.body).error.error_code);
+
+				let result = body.success;
+				return callback(false, result);
+			});
+		},
 		orderHistory: function(symbol, callback, limit = 50) {
 			let opt = defaultRequestOpt;
 				opt.url = baseUrl+'/v1/trading/order_history';
@@ -389,6 +411,187 @@ module.exports = function() {
 		},
 		marketSell: function(symbol, quantity, callback) {
 			placeOrder(symbol, '', quantity, 'ask', 'market', callback);
+		},
+		balances: function(callback) {
+			let opt = defaultRequestOpt;
+				opt.url = baseUrl+'/v1/wallet/balances';
+				opt.headers.authorization = options.apiKey;
+			
+			request(opt, function(error, response, body) {
+				if (error)
+					return callback(error);
+
+				if (response && response.statusCode !== 200)
+					return callback(JSON.parse(response.body).error.error_code);
+
+				let result = JSON.parse(body).result.balances;
+				return callback(false, result);
+			});
+		},
+		balanceHistory: function(currency, callback, limit = 20) {
+			let opt = defaultRequestOpt;
+				opt.url = baseUrl+'/v1/wallet/ledger';
+				opt.qs.currency = currency;
+				opt.qs.limit = limit;
+				opt.headers.authorization = options.apiKey;
+			
+			request(opt, function(error, response, body) {
+				if (error)
+					return callback(error);
+
+				if (response && response.statusCode !== 200)
+					return callback(JSON.parse(response.body).error.error_code);
+
+				let result = JSON.parse(body).result.ledger;
+				return callback(false, result);
+			});
+		},
+		balanceHistoryAll: function(callback, limit = 20) {
+			let opt = defaultRequestOpt;
+				opt.url = baseUrl+'/v1/wallet/ledger';
+				opt.qs.limit = limit;
+				opt.headers.authorization = options.apiKey;
+			
+			request(opt, function(error, response, body) {
+				if (error)
+					return callback(error);
+
+				if (response && response.statusCode !== 200)
+					return callback(JSON.parse(response.body).error.error_code);
+
+				let result = JSON.parse(body).result.ledger;
+				return callback(false, result);
+			});
+		},
+		depositAddress: function(currency, callback) {
+			let opt = defaultRequestOpt;
+				opt.url = baseUrl+'/v1/wallet/deposit_addresses';
+				opt.qs.currency = currency;
+				opt.headers.authorization = options.apiKey;
+			
+			request(opt, function(error, response, body) {
+				if (error)
+					return callback(error);
+
+				if (response && response.statusCode !== 200)
+					return callback(JSON.parse(response.body).error.error_code);
+
+				let result = JSON.parse(body).result.deposit_addresses;
+				return callback(false, result);
+			});
+		},
+		depositAddressesAll: function(callback) {
+			let opt = defaultRequestOpt;
+				opt.url = baseUrl+'/v1/wallet/deposit_addresses';
+				opt.headers.authorization = options.apiKey;
+			
+			request(opt, function(error, response, body) {
+				if (error)
+					return callback(error);
+
+				if (response && response.statusCode !== 200)
+					return callback(JSON.parse(response.body).error.error_code);
+
+				let result = JSON.parse(body).result.deposit_addresses;
+				return callback(false, result);
+			});
+		},
+		depositStatus: function(depositId, callback) {
+			let opt = defaultRequestOpt;
+				opt.url = baseUrl+'/v1/wallet/deposits/'+depositId;
+				opt.headers.authorization = options.apiKey;
+			
+			request(opt, function(error, response, body) {
+				if (error)
+					return callback(error);
+
+				if (response && response.statusCode !== 200)
+					return callback(JSON.parse(response.body).error.error_code);
+
+				let result = JSON.parse(body).result.deposit;
+				return callback(false, result);
+			});
+		},
+		deposits: function(callback) {
+			let opt = defaultRequestOpt;
+				opt.url = baseUrl+'/v1/wallet/deposits';
+				opt.headers.authorization = options.apiKey;
+			
+			request(opt, function(error, response, body) {
+				if (error)
+					return callback(error);
+
+				if (response && response.statusCode !== 200)
+					return callback(JSON.parse(response.body).error.error_code);
+
+				let result = JSON.parse(body).result.deposits;
+				return callback(false, result);
+			});
+		},
+		withdrawalAddresses: function(currency, callback) {
+			let opt = defaultRequestOpt;
+				opt.url = baseUrl+'/v1/wallet/withdrawal_addresses';
+				opt.qs.currency = currency;
+				opt.headers.authorization = options.apiKey;
+			
+			request(opt, function(error, response, body) {
+				if (error)
+					return callback(error);
+
+				if (response && response.statusCode !== 200)
+					return callback(JSON.parse(response.body).error.error_code);
+
+				let result = JSON.parse(body).result.withdrawal_addresses;
+				return callback(false, result);
+			});
+		},
+		withdrawalAddressesAll: function(callback) {
+			let opt = defaultRequestOpt;
+				opt.url = baseUrl+'/v1/wallet/withdrawal_addresses';
+				opt.headers.authorization = options.apiKey;
+			
+			request(opt, function(error, response, body) {
+				if (error)
+					return callback(error);
+
+				if (response && response.statusCode !== 200)
+					return callback(JSON.parse(response.body).error.error_code);
+
+				let result = JSON.parse(body).result.withdrawal_addresses;
+				return callback(false, result);
+			});
+		},
+		withdrawalStatus: function(withdrawalId, callback) {
+			let opt = defaultRequestOpt;
+				opt.url = baseUrl+'/v1/wallet/withdrawals/'+withdrawalId;
+				opt.headers.authorization = options.apiKey;
+			
+			request(opt, function(error, response, body) {
+				if (error)
+					return callback(error);
+
+				if (response && response.statusCode !== 200)
+					return callback(JSON.parse(response.body).error.error_code);
+
+				let result = JSON.parse(body).result.withdrawal;
+				return callback(false, result);
+			});
+		},
+		withdrawals: function(callback) {
+			let opt = defaultRequestOpt;
+				opt.url = baseUrl+'/v1/wallet/withdrawals';
+				opt.headers.authorization = options.apiKey;
+			
+			request(opt, function(error, response, body) {
+				if (error)
+					return callback(error);
+
+				if (response && response.statusCode !== 200)
+					return callback(JSON.parse(response.body).error.error_code);
+
+				let result = JSON.parse(body).result.withdrawals;
+				return callback(false, result);
+			});
 		},
 		websocket: function subscribeWebSocket(channels, callback, reconnect = true) {
 			if (!Array.isArray(channels))
