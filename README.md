@@ -68,6 +68,7 @@ npm install node-cobinhood-api
 #### Main setup
 ```js
 const cobinhood = require('node-cobinhood-api');
+
 cobinhood.options({
     'apiKey': '<api key>',
     'verbose': true
@@ -89,6 +90,7 @@ cobinhood.lastPrice("COB-BTC", (error, lastPrice) => {
 #### Get depth of a symbol
 ```js
 let limit = 10; // Optional. Defaults to 50 if not specified, if limit is 0, it means to fetch the whole order book.
+
 cobinhood.orderBook("COB-BTC", (error, orderBook) => {
     if (!error) {
         console.log(orderBook);
@@ -253,6 +255,7 @@ cobinhood.ticker("COB-BTC", (error, ticker) => {
 #### Get recent trades of a symbol
 ```js
 let limit = 2; // Optional. Defaults to 20 if not specified, max 50.
+
 cobinhood.trades("COB-BTC", (error, trades) => {
     if (!error) {
         console.log(trades);
@@ -282,6 +285,7 @@ cobinhood.trades("COB-BTC", (error, trades) => {
 let timeframe = '5m'; // Timeframes: 1m, 5m, 15m, 30m, 1h, 3h, 6h, 12h, 1D, 7D, 14D, 1M
 let startTime = 1519307723000; // Optional. Unix timestamp in milliseconds. Defaults to 0 if not specified.
 let endTime   = 1519308723000; // Optional. Unix timestamp in milliseconds. Defaults to current server time if not specified.
+
 cobinhood.candles("COB-BTC", timeframe, (error, candles) => {
     if (!error) {
         console.log(candles);
@@ -362,6 +366,7 @@ cobinhood.serverInfo((error, serverInfo) => {
 ```js
 let price = 0.000017;
 let quantity = 1000;
+
 cobinhood.limitBuy("COB-BTC", price, quantity, (error, order) => {
     if (!error) {
         console.log(order);
@@ -391,6 +396,7 @@ cobinhood.limitBuy("COB-BTC", price, quantity, (error, order) => {
 ```js
 let price = 0.000017;
 let quantity = 1000;
+
 cobinhood.limitSell("COB-BTC", price, quantity, (error, order) => {
     if (!error) {
         console.log(order);
@@ -419,6 +425,7 @@ cobinhood.limitSell("COB-BTC", price, quantity, (error, order) => {
 #### Place a MARKET BUY order
 ```js
 let quantity = 1000;
+
 cobinhood.marketBuy("COB-BTC", quantity, (error, order) => {
     if (!error) {
         console.log(order);
@@ -447,6 +454,7 @@ cobinhood.marketBuy("COB-BTC", quantity, (error, order) => {
 #### Place a MARKET SELL order
 ```js
 let quantity = 1000;
+
 cobinhood.marketSell("COB-BTC", quantity, (error, order) => {
     if (!error) {
         console.log(order);
@@ -475,6 +483,7 @@ cobinhood.marketSell("COB-BTC", quantity, (error, order) => {
 #### Get order status
 ```js
 let orderId = '37f550a2-2aa6-20f4-a3fe-e120f420637c';
+
 cobinhood.orderStatus(orderId, (error, order) => {
     if (!error) {
         console.log(order);
@@ -503,6 +512,7 @@ cobinhood.orderStatus(orderId, (error, order) => {
 #### Cancel order
 ```js
 let orderId = '37f550a2-2aa6-20f4-a3fe-e120f420637c';
+
 cobinhood.orderCancel(orderId, (error, success) => {
     if (!error && success) {
         console.log("Order cancelled");
@@ -516,6 +526,7 @@ cobinhood.orderCancel(orderId, (error, success) => {
 let orderId = '37f550a2-2aa6-20f4-a3fe-e120f420637c';
 let price = 0.000018;
 let quantity = 1000;
+
 cobinhood.orderModify(orderId, price, quantity, (error, success) => {
     if (!error && success) {
         console.log("Order modified");
@@ -527,6 +538,7 @@ cobinhood.orderModify(orderId, price, quantity, (error, success) => {
 #### Get open orders of a symbol
 ```js
 let limit = 2; // Optional. Defaults to 20 if not specified, max 50.
+
 cobinhood.openOrders("COB-ETH", (error, openOrders) => {
     if (!error) {
         console.log(openOrders);
@@ -555,6 +567,7 @@ cobinhood.openOrders("COB-ETH", (error, openOrders) => {
 #### Get all open orders
 ```js
 let limit = 2; // Optional. Defaults to 20 if not specified, max 50.
+
 cobinhood.openOrdersAll((error, openOrdersAll) => {
     if (!error) {
         console.log(openOrdersAll);
@@ -594,6 +607,7 @@ cobinhood.openOrdersAll((error, openOrdersAll) => {
 #### Get order trades
 ```js
 let orderId = '37f550a2-2aa6-20f4-a3fe-e120f420637c';
+
 cobinhood.orderTrades(orderId, (error, orderTrades) => {
     if (!error) {
         console.log(orderTrades);
@@ -621,6 +635,7 @@ cobinhood.orderTrades(orderId, (error, orderTrades) => {
 #### Get order history of a symbol
 ```js
 let limit = 2; // Optional. Defaults to 50 if not specified.
+
 cobinhood.orderHistory("COB-BTC", (error, orderHistory) => {
     if (!error) {
         console.log(orderHistory);
@@ -660,6 +675,7 @@ cobinhood.orderHistory("COB-BTC", (error, orderHistory) => {
 #### Get all order history
 ```js
 let limit = 2; // Optional. Defaults to 50 if not specified.
+
 cobinhood.orderHistoryAll((error, orderHistoryAll) => {
     if (!error) {
         console.log(orderHistoryAll);
@@ -732,6 +748,7 @@ cobinhood.balances((error, balances) => {
 #### Get balance history of a currency
 ```js
 let limit = 3; // Defaults to 20 if not specified, max 50.
+
 cobinhood.balanceHistory("ETH", (error, balanceHistory) => {
     if (!error) {
         console.log(balanceHistory);
@@ -782,6 +799,7 @@ cobinhood.balanceHistory("ETH", (error, balanceHistory) => {
 #### Get all balance history
 ```js
 let limit = 3; // Defaults to 20 if not specified, max 50.
+
 cobinhood.balanceHistoryAll((error, balanceHistoryAll) => {
     if (!error) {
         console.log(balanceHistoryAll);
@@ -878,6 +896,7 @@ cobinhood.depositAddressesAll((error, depositAddressesAll) => {
 #### Get deposit status
 ```js
 let depositId = '09619448-985d-4485-835e-b69096194482';
+
 cobinhood.depositStatus(depositId, (error, depositStatus) => {
     if (!error) {
         console.log(depositStatus);
@@ -1001,6 +1020,7 @@ cobinhood.withdrawalAddressesAll((error, withdrawalAddressesAll) => {
 #### Get withdrawal status
 ```js
 let withdrawalId = '09619448-985d-4485-835e-b69096194482';
+
 cobinhood.withdrawalStatus(withdrawalId, (error, withdrawalStatus) => {
     if (!error) {
         console.log(withdrawalStatus);
@@ -1071,6 +1091,7 @@ let channel = {
     "trading_pair_id": 'COB-BTC'
 };
 let reconnect = false; // Optional. Defaults to true if not specified.
+
 cobinhood.websocket(channel, (error, message) => {
     if (!error) {
         console.log(message);
@@ -1117,6 +1138,7 @@ let channel = {
     "precision": '1E-7' // Optional. Defaults to 1E-7 if not specified.
 };
 let reconnect = false; // Optional. Defaults to true if not specified.
+
 cobinhood.websocket(channel, (error, message) => {
     if (!error) {
         console.log(message);
@@ -1172,6 +1194,7 @@ let channel = {
     "trading_pair_id": 'COB-BTC'
 };
 let reconnect = false; // Optional. Defaults to true if not specified.
+
 cobinhood.websocket(channel, (error, message) => {
     if (!error) {
         console.log(message);
@@ -1232,6 +1255,7 @@ let channel = {
     "timeframe": '5m' // Timeframes: 1m, 5m, 15m, 30m, 1h, 3h, 6h, 12h, 1D, 7D, 14D, 1M
 };
 let reconnect = false; // Optional. Defaults to true if not specified.
+
 cobinhood.websocket(channel, (error, message) => {
     if (!error) {
         console.log(message);
@@ -1275,6 +1299,7 @@ let channel = {
     "type": 'order'
 };
 let reconnect = false; // Optional. Defaults to true if not specified.
+
 cobinhood.websocket(channel, (error, message) => {
     if (!error) {
         console.log(message);
@@ -1325,6 +1350,7 @@ let channels = [{
     "type": 'order'
 }];
 let reconnect = false; // Optional. Defaults to true if not specified.
+
 cobinhood.websocket(channels, (error, message) => {
     if (!error) {
         console.log(message);
