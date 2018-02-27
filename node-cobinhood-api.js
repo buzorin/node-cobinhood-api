@@ -14,20 +14,21 @@ module.exports = function() {
 	const streamUrl = 'wss://feed.cobinhood.com/ws';
 	
 	const defaultOptions = {
-		verbose: false,
-		requestTimeout: 30000
+		'apiKey': '',
+		'verbose': false,
+		'requestTimeout': 30000
 	};
 
 	let options = defaultOptions;
 
 	const defaultRequestOpt = {
-		method: 'GET',
-		qs: {},
-		headers: {
+		'method': 'GET',
+		'qs': {},
+		'headers': {
 			'User-Agent': 'Mozilla/4.0 (compatible; Node Cobinhood API)',
 			'Content-type': 'application/x-www-form-urlencoded'
 		},
-		timeout: options.requestTimeout
+		'timeout': options.requestTimeout
 	};
 
 	const placeOrder = function(symbol, price, quantity, side, type, callback) {
