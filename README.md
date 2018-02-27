@@ -1001,7 +1001,7 @@ cobinhood.withdrawalAddressesAll((error, withdrawalAddressesAll) => {
 #### Get withdrawal status
 ```js
 let withdrawalId = '09619448-985d-4485-835e-b69096194482';
-cobinhood.withdrawalStatus(depositId, (error, withdrawalStatus) => {
+cobinhood.withdrawalStatus(withdrawalId, (error, withdrawalStatus) => {
     if (!error) {
         console.log(withdrawalStatus);
     }
