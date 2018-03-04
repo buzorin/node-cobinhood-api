@@ -1,7 +1,7 @@
 [![NPM](https://nodei.co/npm/node-cobinhood-api.png?compact=true)](https://npmjs.org/package/node-cobinhood-api)
 
-# Node Cobinhood API  [![NPM downloads](https://img.shields.io/npm/dt/node-cobinhood-api.svg?style=flat-square&maxAge=3600)](https://www.npmjs.com/package/node-cobinhood-api)
-A simple to use Node.js library for [Cobinhood](https://cobinhood.com) The World's First ZERO Trading Fees Cryptocurrency Exchange.
+# Node Cobinhood API  [![NPM downloads](https://img.shields.io/npm/dt/node-cobinhood-api.svg?style=flat-square&maxAge=86400)](https://www.npmjs.com/package/node-cobinhood-api)
+Node Cobinhood API is a simple to use Node.js library for [Cobinhood](https://cobinhood.com) The World's First ZERO Trading Fees Cryptocurrency Exchange.
 
 > NOTE: COBINHOOD IS CURRENTLY UNDER HEAVY DEVELOPMENT,
 > APIs ARE SUBJECT TO CHANGE WITHOUT PRIOR NOTICE
@@ -14,12 +14,13 @@ A simple to use Node.js library for [Cobinhood](https://cobinhood.com) The World
   + [Installation](#installation)
   + [Main setup](#main-setup)
 * [Public API](#public-api)
-  + [Get latest price of a symbol](#get-latest-price-of-a-symbol)
+  + [Get the latest price of a symbol](#get-the-latest-price-of-a-symbol)
   + [Get depth of a symbol](#get-depth-of-a-symbol)
   + [Get all currencies](#get-all-currencies)
   + [Get info for all trading pairs](#get-info-for-all-trading-pairs)
   + [Get trading statistics](#get-trading-statistics)
   + [Get ticker of a symbol](#get-ticker-of-a-symbol)
+  + [Get tickers of all symbols](#get-tickers-of-all-symbols)
   + [Get recent trades of a symbol](#get-recent-trades-of-a-symbol)
   + [Get candles of a symbol](#get-candles-of-a-symbol)
   + [Get server time](#get-server-time)
@@ -29,25 +30,25 @@ A simple to use Node.js library for [Cobinhood](https://cobinhood.com) The World
   + [Place a LIMIT SELL order](#place-a-limit-sell-order)
   + [Place a MARKET BUY order](#place-a-market-buy-order)
   + [Place a MARKET SELL order](#place-a-market-sell-order)
-  + [Get order status](#get-order-status)
-  + [Cancel order](#cancel-order)
-  + [Modify order](#modify-order)
+  + [Get an order's status](#get-an-orders-status)
+  + [Cancel an order](#cancel-an-order)
+  + [Modify an order](#modify-an-order)
   + [Get open orders of a symbol](#get-open-orders-of-a-symbol)
   + [Get all open orders](#get-all-open-orders)
-  + [Get order trades](#get-order-trades)
+  + [Get order's trades](#get-orders-trades)
   + [Get order history of a symbol](#get-order-history-of-a-symbol)
   + [Get all order history](#get-all-order-history)
 * [Wallet API](#wallet-api)
   + [Get wallet balances](#get-wallet-balances)
   + [Get balance history of a currency](#get-balance-history-of-a-currency)
   + [Get all balance history](#get-all-balance-history)
-  + [Get deposit address of a currency](#get-deposit-address-of-a-currency)
+  + [Get deposit addresses of a currency](#get-deposit-addresses-of-a-currency)
   + [Get all deposit addresses](#get-all-deposit-addresses)
-  + [Get deposit status](#get-deposit-status)
+  + [Get deposit's status](#get-deposits-status)
   + [Get all deposits](#get-all-deposits)
   + [Get withdrawal addresses of a currency](#get-withdrawal-addresses-of-a-currency)
   + [Get all withdrawal addresses](#get-all-withdrawal-addresses)
-  + [Get withdrawal status](#get-withdrawal-status)
+  + [Get withdrawal's status](#get-withdrawals-status)
   + [Get all withdrawals](#get-all-withdrawals)
 * [Websockets](#websockets)
   + [Get trade updates of a symbol](#get-trade-updates-of-a-symbol)
@@ -61,7 +62,7 @@ A simple to use Node.js library for [Cobinhood](https://cobinhood.com) The World
 ## Getting started
 
 #### Installation
-```js
+```sh
 npm install node-cobinhood-api
 ```
 
@@ -77,7 +78,7 @@ cobinhood.options({
 
 ## Public API
 
-#### Get latest price of a symbol
+#### Get the latest price of a symbol
 ```js
 cobinhood.lastPrice("COB-BTC", (error, lastPrice) => {
     if (!error) {
@@ -252,6 +253,51 @@ cobinhood.ticker("COB-BTC", (error, ticker) => {
 ```
 </details>
 
+#### Get tickers of all symbols
+```js
+cobinhood.tickers((error, tickers) => {
+    if (!error) {
+        console.log(tickers);
+    }
+});
+```
+
+<details>
+<summary>Response</summary>
+
+```js
+[ { trading_pair_id: 'MANA-ETH',
+    timestamp: 1520115000000,
+    '24h_high': '0.0001278',
+    '24h_low': '0.0001106',
+    '24h_open': '0.0001106',
+    '24h_volume': '3224.93485295',
+    last_trade_price: '0.000125',
+    highest_bid: '0.0001133',
+    lowest_ask: '0.0001365' },
+  { trading_pair_id: 'SPHTX-USDT',
+    timestamp: 1520115000000,
+    '24h_high': '0',
+    '24h_low': '0',
+    '24h_open': '0',
+    '24h_volume': '0',
+    last_trade_price: '0',
+    highest_bid: '0.0578',
+    lowest_ask: '3.9956' },
+  { trading_pair_id: 'BDG-USDT',
+    timestamp: 1520115000000,
+    '24h_high': '0.149',
+    '24h_low': '0.149',
+    '24h_open': '0.149',
+    '24h_volume': '0',
+    last_trade_price: '0.149',
+    highest_bid: '0.01173',
+    lowest_ask: '0.14599' },
+  ...
+]
+```
+</details>
+
 #### Get recent trades of a symbol
 ```js
 let limit = 2; // Optional. Defaults to 20 if not specified, max 50.
@@ -283,8 +329,8 @@ cobinhood.trades("COB-BTC", (error, trades) => {
 #### Get candles of a symbol
 ```js
 let timeframe = '5m'; // Timeframes: 1m, 5m, 15m, 30m, 1h, 3h, 6h, 12h, 1D, 7D, 14D, 1M
-let startTime = 1519307723000; // Optional. Unix timestamp in milliseconds. Defaults to 0 if not specified.
-let endTime   = 1519308723000; // Optional. Unix timestamp in milliseconds. Defaults to current server time if not specified.
+let startTime = 1519307723000; // Optional. Unix timestamp in milliseconds. Defaults to 0 if not specified. You can set it to false.
+let endTime   = 1519308723000; // Optional. Unix timestamp in milliseconds. Defaults to current server time if not specified. You can set it to false.
 
 cobinhood.candles("COB-BTC", timeframe, (error, candles) => {
     if (!error) {
@@ -480,7 +526,7 @@ cobinhood.marketSell("COB-BTC", quantity, (error, order) => {
 ```
 </details>
 
-#### Get order status
+#### Get an order's status
 ```js
 let orderId = '37f550a2-2aa6-20f4-a3fe-e120f420637c';
 
@@ -509,7 +555,7 @@ cobinhood.orderStatus(orderId, (error, order) => {
 ```
 </details>
 
-#### Cancel order
+#### Cancel an order
 ```js
 let orderId = '37f550a2-2aa6-20f4-a3fe-e120f420637c';
 
@@ -521,7 +567,7 @@ cobinhood.orderCancel(orderId, (error, success) => {
 });
 ```
 
-#### Modify order
+#### Modify an order
 ```js
 let orderId = '37f550a2-2aa6-20f4-a3fe-e120f420637c';
 let price = 0.000018;
@@ -604,7 +650,7 @@ cobinhood.openOrdersAll((error, openOrdersAll) => {
 ```
 </details>
 
-#### Get order trades
+#### Get order's trades
 ```js
 let orderId = '37f550a2-2aa6-20f4-a3fe-e120f420637c';
 
@@ -667,7 +713,7 @@ cobinhood.orderHistory("COB-BTC", (error, orderHistory) => {
     filled: '1000',
     state: 'filled',
     timestamp: 1519320455598,
-    eq_price: '0',
+    eq_price: '0.000017',
     completed_at: '2018-02-22T17:35:30.412993Z' } ]
 ```
 </details>
@@ -847,11 +893,11 @@ cobinhood.balanceHistoryAll((error, balanceHistoryAll) => {
 ```
 </details>
 
-#### Get deposit address of a currency
+#### Get deposit addresses of a currency
 ```js
-cobinhood.depositAddress("ETH", (error, depositAddress) => {
+cobinhood.depositAddresses("ETH", (error, depositAddresses) => {
     if (!error) {
-        console.log(depositAddress);
+        console.log(depositAddresses);
     }
 });
 ```
@@ -893,7 +939,7 @@ cobinhood.depositAddressesAll((error, depositAddressesAll) => {
 ```
 </details>
 
-#### Get deposit status
+#### Get deposit's status
 ```js
 let depositId = '09619448-985d-4485-835e-b69096194482';
 
@@ -1017,7 +1063,7 @@ cobinhood.withdrawalAddressesAll((error, withdrawalAddressesAll) => {
 ```
 </details>
 
-#### Get withdrawal status
+#### Get withdrawal's status
 ```js
 let withdrawalId = '09619448-985d-4485-835e-b69096194482';
 

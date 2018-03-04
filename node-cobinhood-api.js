@@ -209,6 +209,21 @@ module.exports = function() {
 				return callback(false, result);
 			});
 		},
+		tickers: function(callback) {
+			let opt = defaultRequestOpt;
+				opt.url = baseUrl+'/v1/market/tickers';
+
+			request(opt, function(error, response, body) {
+				if (error)
+					return callback(error);
+
+				if (response && response.statusCode !== 200)
+					return callback(JSON.parse(response.body).error.error_code);
+
+				let result = JSON.parse(body).result.tickers;
+				return callback(false, result);
+			});
+		},
 		lastPrice: function(symbol, callback) {
 			let opt = defaultRequestOpt;
 				opt.url = baseUrl+'/v1/market/tickers/'+symbol;
@@ -464,7 +479,7 @@ module.exports = function() {
 				return callback(false, result);
 			});
 		},
-		depositAddress: function(currency, callback) {
+		depositAddresses: function(currency, callback) {
 			let opt = defaultRequestOpt;
 				opt.url = baseUrl+'/v1/wallet/deposit_addresses';
 				opt.qs.currency = currency;
