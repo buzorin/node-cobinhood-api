@@ -76,13 +76,15 @@ module.exports = function() {
 	};
 
 	const safeError = function (response) {
+		let errorMsg;
 		try {
-			const errorCode = JSON.parse(response.body).error.error_code;
+			errorMsg = JSON.parse(response.body).error.error_code;
 		} catch (err) {
-			console.log('Error:', err)
-			return err;
+			console.log('Cobinhood connection error:', err)
+			errorMsg = 'JSON response from Cobinhood is malformed';
+		} finally {
+			return errorMsg;
 		}
-		return error;
 	}
 
 	return {
