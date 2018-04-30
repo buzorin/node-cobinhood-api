@@ -75,6 +75,18 @@ module.exports = function() {
 		}
 	};
 
+	const safeError = function (response) {
+		let errorMsg;
+		try {
+			errorMsg = JSON.parse(response.body).error.error_code;
+		} catch (err) {
+			console.log('Cobinhood connection error:', err)
+			errorMsg = 'JSON response from Cobinhood is malformed';
+		} finally {
+			return errorMsg;
+		}
+	}
+
 	return {
 		options: function(opts) {
 			for (let opt in opts) {
@@ -90,7 +102,7 @@ module.exports = function() {
 					return callback(error);
 
 				if (response && response.statusCode !== 200)
-					return callback(JSON.parse(response.body).error.error_code);
+					return callback(safeError(response));
 
 				let result = JSON.parse(body).result.time;
 				return callback(false, result);
@@ -105,7 +117,7 @@ module.exports = function() {
 					return callback(error);
 
 				if (response && response.statusCode !== 200)
-					return callback(JSON.parse(response.body).error.error_code);
+					return callback(safeError(response));
 
 				let result = JSON.parse(body).result.info;
 				return callback(false, result);
@@ -120,7 +132,7 @@ module.exports = function() {
 					return callback(error);
 
 				if (response && response.statusCode !== 200)
-					return callback(JSON.parse(response.body).error.error_code);
+					return callback(safeError(response));
 
 				let result = JSON.parse(body).result.currencies;
 				return callback(false, result);
@@ -135,7 +147,7 @@ module.exports = function() {
 					return callback(error);
 
 				if (response && response.statusCode !== 200)
-					return callback(JSON.parse(response.body).error.error_code);
+					return callback(safeError(response));
 
 				let result = JSON.parse(body).result.trading_pairs;
 				return callback(false, result);
@@ -151,7 +163,7 @@ module.exports = function() {
 					return callback(error);
 
 				if (response && response.statusCode !== 200)
-					return callback(JSON.parse(response.body).error.error_code);
+					return callback(safeError(response));
 
 				let orderbook = JSON.parse(body).result.orderbook;
 				let result = {
@@ -188,7 +200,7 @@ module.exports = function() {
 					return callback(error);
 
 				if (response && response.statusCode !== 200)
-					return callback(JSON.parse(response.body).error.error_code);
+					return callback(safeError(response));
 
 				let result = JSON.parse(body).result;
 				return callback(false, result);
@@ -203,7 +215,7 @@ module.exports = function() {
 					return callback(error);
 
 				if (response && response.statusCode !== 200)
-					return callback(JSON.parse(response.body).error.error_code);
+					return callback(safeError(response));
 
 				let result = JSON.parse(body).result.ticker;
 				return callback(false, result);
@@ -218,7 +230,7 @@ module.exports = function() {
 					return callback(error);
 
 				if (response && response.statusCode !== 200)
-					return callback(JSON.parse(response.body).error.error_code);
+					return callback(safeError(response));
 
 				let result = JSON.parse(body).result.tickers;
 				return callback(false, result);
@@ -233,7 +245,7 @@ module.exports = function() {
 					return callback(error);
 
 				if (response && response.statusCode !== 200)
-					return callback(JSON.parse(response.body).error.error_code);
+					return callback(safeError(response));
 
 				let result = JSON.parse(body).result.ticker.last_trade_price;
 				return callback(false, result);
@@ -249,7 +261,7 @@ module.exports = function() {
 					return callback(error);
 
 				if (response && response.statusCode !== 200)
-					return callback(JSON.parse(response.body).error.error_code);
+					return callback(safeError(response));
 
 				let result = JSON.parse(body).result.trades;
 				return callback(false, result);
@@ -268,7 +280,7 @@ module.exports = function() {
 					return callback(error);
 
 				if (response && response.statusCode !== 200)
-					return callback(JSON.parse(response.body).error.error_code);
+					return callback(safeError(response));
 
 				let result = JSON.parse(body).result.candles;
 				return callback(false, result);
@@ -284,7 +296,7 @@ module.exports = function() {
 					return callback(error);
 
 				if (response && response.statusCode !== 200)
-					return callback(JSON.parse(response.body).error.error_code);
+					return callback(safeError(response));
 
 				let result = JSON.parse(body).result.order;
 				return callback(false, result);
@@ -300,7 +312,7 @@ module.exports = function() {
 					return callback(error);
 
 				if (response && response.statusCode !== 200)
-					return callback(JSON.parse(response.body).error.error_code);
+					return callback(safeError(response));
 
 				let result = JSON.parse(body).result.trades;
 				return callback(false, result);
@@ -318,7 +330,7 @@ module.exports = function() {
 					return callback(error);
 
 				if (response && response.statusCode !== 200)
-					return callback(JSON.parse(response.body).error.error_code);
+					return callback(safeError(response));
 
 				let result = JSON.parse(body).result.orders;
 				return callback(false, result);
@@ -335,7 +347,7 @@ module.exports = function() {
 					return callback(error);
 
 				if (response && response.statusCode !== 200)
-					return callback(JSON.parse(response.body).error.error_code);
+					return callback(safeError(response));
 
 				let result = JSON.parse(body).result.orders;
 				return callback(false, result);
@@ -353,7 +365,7 @@ module.exports = function() {
 					return callback(error);
 
 				if (response && response.statusCode !== 200)
-					return callback(JSON.parse(response.body).error.error_code);
+					return callback(safeError(response));
 
 				let result = JSON.parse(body).success;
 				return callback(false, result);
@@ -375,7 +387,7 @@ module.exports = function() {
 					return callback(error);
 
 				if (response && response.statusCode !== 200)
-					return callback(JSON.parse(response.body).error.error_code);
+					return callback(safeError(response));
 
 				let result = body.success;
 				return callback(false, result);
@@ -393,7 +405,7 @@ module.exports = function() {
 					return callback(error);
 
 				if (response && response.statusCode !== 200)
-					return callback(JSON.parse(response.body).error.error_code);
+					return callback(safeError(response));
 
 				let result = JSON.parse(body).result.orders;
 				return callback(false, result);
@@ -410,7 +422,7 @@ module.exports = function() {
 					return callback(error);
 
 				if (response && response.statusCode !== 200)
-					return callback(JSON.parse(response.body).error.error_code);
+					return callback(safeError(response));
 
 				let result = JSON.parse(body).result.orders;
 				return callback(false, result);
@@ -436,9 +448,8 @@ module.exports = function() {
 			request(opt, function(error, response, body) {
 				if (error)
 					return callback(error);
-
 				if (response && response.statusCode !== 200)
-					return callback(JSON.parse(response.body).error.error_code);
+					return callback(safeError(response));
 
 				let result = JSON.parse(body).result.balances;
 				return callback(false, result);
@@ -456,7 +467,7 @@ module.exports = function() {
 					return callback(error);
 
 				if (response && response.statusCode !== 200)
-					return callback(JSON.parse(response.body).error.error_code);
+					return callback(safeError(response));
 
 				let result = JSON.parse(body).result.ledger;
 				return callback(false, result);
@@ -473,7 +484,7 @@ module.exports = function() {
 					return callback(error);
 
 				if (response && response.statusCode !== 200)
-					return callback(JSON.parse(response.body).error.error_code);
+					return callback(safeError(response));
 
 				let result = JSON.parse(body).result.ledger;
 				return callback(false, result);
@@ -490,7 +501,7 @@ module.exports = function() {
 					return callback(error);
 
 				if (response && response.statusCode !== 200)
-					return callback(JSON.parse(response.body).error.error_code);
+					return callback(safeError(response));
 
 				let result = JSON.parse(body).result.deposit_addresses;
 				return callback(false, result);
@@ -506,7 +517,7 @@ module.exports = function() {
 					return callback(error);
 
 				if (response && response.statusCode !== 200)
-					return callback(JSON.parse(response.body).error.error_code);
+					return callback(safeError(response));
 
 				let result = JSON.parse(body).result.deposit_addresses;
 				return callback(false, result);
@@ -522,7 +533,7 @@ module.exports = function() {
 					return callback(error);
 
 				if (response && response.statusCode !== 200)
-					return callback(JSON.parse(response.body).error.error_code);
+					return callback(safeError(response));
 
 				let result = JSON.parse(body).result.deposit;
 				return callback(false, result);
@@ -538,7 +549,7 @@ module.exports = function() {
 					return callback(error);
 
 				if (response && response.statusCode !== 200)
-					return callback(JSON.parse(response.body).error.error_code);
+					return callback(safeError(response));
 
 				let result = JSON.parse(body).result.deposits;
 				return callback(false, result);
@@ -555,7 +566,7 @@ module.exports = function() {
 					return callback(error);
 
 				if (response && response.statusCode !== 200)
-					return callback(JSON.parse(response.body).error.error_code);
+					return callback(safeError(response));
 
 				let result = JSON.parse(body).result.withdrawal_addresses;
 				return callback(false, result);
@@ -571,7 +582,7 @@ module.exports = function() {
 					return callback(error);
 
 				if (response && response.statusCode !== 200)
-					return callback(JSON.parse(response.body).error.error_code);
+					return callback(safeError(response));
 
 				let result = JSON.parse(body).result.withdrawal_addresses;
 				return callback(false, result);
@@ -587,7 +598,7 @@ module.exports = function() {
 					return callback(error);
 
 				if (response && response.statusCode !== 200)
-					return callback(JSON.parse(response.body).error.error_code);
+					return callback(safeError(response));
 
 				let result = JSON.parse(body).result.withdrawal;
 				return callback(false, result);
@@ -603,7 +614,7 @@ module.exports = function() {
 					return callback(error);
 
 				if (response && response.statusCode !== 200)
-					return callback(JSON.parse(response.body).error.error_code);
+					return callback(safeError(response));
 
 				let result = JSON.parse(body).result.withdrawals;
 				return callback(false, result);
